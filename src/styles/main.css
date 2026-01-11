@@ -1,6 +1,0 @@
-/* Main CSS Entry Point */
-@import './variables.css';
-@import './reset.css';
-@import './components.css';
-@import './animations.css';
-@import './utilities.css';
