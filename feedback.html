@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Reviews | LankaShop Elite</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="src/styles/main.css">
+    
+    <style>
+        .star.active {
+            fill: #facc15; /* yellow-400 */
+            color: #facc15;
+        }
+        .star.inactive {
+            fill: none;
+            color: #475569; /* slate-600 */
+        }
+        .star {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .star:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="antialiased bg-[#0f172a] text-slate-100 min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass border-b border-white/5">
+        <div class="container mx-auto px-4 sm:px-6 py-4">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <a href="index.html" class="text-2xl font-bold tracking-tighter flex items-center gap-2">
+                    <i data-lucide="zap" class="text-cyan-400"></i>
+                    <span class="text-white">LANKA<span class="text-cyan-400">SHOP</span> ELITE</span>
+                </a>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-slate-300 hover:text-cyan-400 transition">Home</a>
+                    <a href="index.html#shop" class="text-slate-300 hover:text-cyan-400 transition">Shop</a>
+                    <a href="#" class="text-cyan-400 transition">Reviews</a>
+                    <div id="nav-auth" class="flex items-center gap-4">
+                        <!-- Auth buttons will be injected via script.js -->
+                    </div>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-cyan-400">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden mt-4 hidden">
+                <div class="flex flex-col gap-4 py-4 border-t border-white/5">
+                    <a href="index.html" class="text-slate-300 hover:text-cyan-400 transition">Home</a>
+                    <a href="index.html#shop" class="text-slate-300 hover:text-cyan-400 transition">Shop</a>
+                    <a href="#" class="text-cyan-400 transition">Reviews</a>
+                    <div id="mobile-auth" class="pt-4 border-t border-white/5">
+                        <!-- Mobile auth buttons -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <header class="pt-32 pb-10 relative overflow-hidden">
+        <div class="glow-cyan top-[-20%] left-[-10%] opacity-20"></div>
+        <div class="container mx-auto px-4 sm:px-6 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Customer <span class="text-cyan-400">Reviews</span></h1>
+            <p class="text-slate-400 max-w-2xl mx-auto">
+                See what our elite members are saying about their experience.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 sm:px-6 pb-20">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Left Column: Submit Review & Stats -->
+            <div class="lg:col-span-1 space-y-8">
+                
+                <!-- Stats Card -->
+                <div class="glass-card p-6 rounded-xl">
+                    <div class="text-center mb-6">
+                        <div class="text-5xl font-bold text-white mb-2" id="average-rating">0.0</div>
+                        <div class="flex justify-center gap-1 mb-2">
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                            <i data-lucide="star" class="w-5 h-5 text-yellow-400 fill-yellow-400"></i>
+                        </div>
+                        <p class="text-sm text-slate-400">Based on <span id="total-reviews">0</span> reviews</p>
+                        <p class="text-xs text-green-400 mt-1" id="verified-reviews">0 verified</p>
+                    </div>
+                    
+                    <div class="space-y-2">
+                        <!-- Rating Bars -->
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-3">5</span>
+                            <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-5" class="h-full bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <span id="count-5" class="w-6 text-right text-slate-500">0</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-3">4</span>
+                            <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-4" class="h-full bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <span id="count-4" class="w-6 text-right text-slate-500">0</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-3">3</span>
+                            <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-3" class="h-full bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <span id="count-3" class="w-6 text-right text-slate-500">0</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-3">2</span>
+                            <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-2" class="h-full bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <span id="count-2" class="w-6 text-right text-slate-500">0</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-sm">
+                            <span class="w-3">1</span>
+                            <i data-lucide="star" class="w-3 h-3 text-yellow-400"></i>
+                            <div class="flex-1 h-2 bg-slate-800 rounded-full overflow-hidden">
+                                <div id="bar-1" class="h-full bg-yellow-400 rounded-full" style="width: 0%"></div>
+                            </div>
+                            <span id="count-1" class="w-6 text-right text-slate-500">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Write Review Form -->
+                <div class="glass-card p-6 rounded-xl">
+                    <h3 class="text-xl font-bold mb-4">Write a Review</h3>
+                    <form id="submit-review-form" class="space-y-4">
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Product</label>
+                            <select id="review-product" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white">
+                                <!-- Options loaded via JS -->
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Rating</label>
+                            <div class="flex gap-2 mb-2" id="rating-stars">
+                                <i data-lucide="star" data-rating="1" class="star w-6 h-6"></i>
+                                <i data-lucide="star" data-rating="2" class="star w-6 h-6"></i>
+                                <i data-lucide="star" data-rating="3" class="star w-6 h-6"></i>
+                                <i data-lucide="star" data-rating="4" class="star w-6 h-6"></i>
+                                <i data-lucide="star" data-rating="5" class="star w-6 h-6"></i>
+                            </div>
+                            <span id="rating-text" class="text-xs text-cyan-400">Click stars to rate</span>
+                            <input type="hidden" id="review-rating" value="0">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm text-slate-400 mb-1">Review</label>
+                            <textarea id="review-comment" rows="4" class="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-white" placeholder="Share your experience..."></textarea>
+                        </div>
+                        
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="review-verified" class="rounded bg-slate-900 border-slate-700">
+                            <label for="review-verified" class="text-sm text-slate-400">I have purchased this product</label>
+                        </div>
+                        
+                        <button type="submit" class="btn-neon w-full py-2 rounded font-bold">Submit Review</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Reviews List -->
+            <div class="lg:col-span-2">
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-2 mb-6">
+                    <button data-filter="all" class="px-4 py-2 rounded-full border border-cyan-500/50 text-cyan-400 bg-cyan-500/10 text-sm transition">
+                        All Reviews
+                    </button>
+                    <button data-filter="5" class="px-4 py-2 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:border-white/30 text-sm transition">
+                        5 Stars
+                    </button>
+                    <button data-filter="verified" class="px-4 py-2 rounded-full border border-slate-700 text-slate-400 hover:text-white hover:border-white/30 text-sm transition">
+                        Verified Only
+                    </button>
+                </div>
+
+                <!-- Reviews Grid -->
+                <div id="reviews-list" class="space-y-4">
+                    <!-- Reviews loaded via JS -->
+                </div>
+                
+                <!-- Load More -->
+                <div class="text-center mt-8">
+                    <button id="load-more-reviews" class="px-6 py-2 rounded-full border border-slate-700 text-slate-400 hover:bg-white/5 transition">
+                        Load More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 bg-slate-950 py-12">
+        <div class="container mx-auto px-4 sm:px-6 text-center">
+            <p class="text-slate-500 text-sm">
+                &copy; 2026 LankaShop Elite. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script type="module" src="./src/scripts/main.js"></script>
+    <script type="module" src="./src/scripts/feedback.js"></script>
+    
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
