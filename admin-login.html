@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - 3D Store</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Particle Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Login Container -->
+    <div class="container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+        <div class="card-3d" style="max-width: 450px; width: 100%;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 4rem; margin-bottom: 15px;">🔐</div>
+                <h2 style="margin-bottom: 10px;">Admin Access</h2>
+                <p style="opacity: 0.7;">Enter your credentials to continue</p>
+            </div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        required 
+                        placeholder="admin@3dstore.com"
+                        autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        required 
+                        placeholder="Enter password"
+                        autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="btn-3d btn-primary" style="width: 100%; margin-top: 10px;">
+                    Login
+                </button>
+            </form>
+
+            <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <a href="index.html" style="color: var(--primary); font-size: 0.9rem;">
+                    ← Back to Store
+                </a>
+            </div>
+
+            <div id="loginError" class="hidden" style="margin-top: 20px; padding: 12px; background: rgba(239, 71, 111, 0.2); border: 1px solid var(--danger); border-radius: 10px; color: var(--danger); text-align: center; font-size: 0.9rem;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="config.js"></script>
+    <script src="background.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(
+            SUPABASE_CONFIG.url,
+            SUPABASE_CONFIG.anonKey
+        );
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = 'admin.html';
+            }
+        });
+
+        // Handle Login
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('loginError');
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            
+            // Disable button and show loading
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Logging in...';
+            errorDiv.classList.add('hidden');
+
+            try {
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+                if (error) throw error;
+
+                // Login successful
+                showToast('Login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'admin.html';
+                }, 500);
+
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = error.message || 'Invalid credentials. Please try again.';
+                errorDiv.classList.remove('hidden');
+                
+                // Re-enable button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Login';
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = type === 'success' ? 'show success' : (type === 'error' ? 'show error' : 'show');
+            setTimeout(() => {
+                toast.className = '';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
